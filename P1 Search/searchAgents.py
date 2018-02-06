@@ -376,7 +376,26 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+
+    maxVal = 0
+    i = 0
+    # util.raiseNotDefined()
+    for visitedCorner in state[1]:
+        if not visitedCorner:
+            # Euclidean Distance - Expanded 1241 Nodes
+            # maxVal = max(maxVal, ( (state[0][0] - corners[i][0]) ** 2 + (state[0][1] - corners[i][1]) ** 2 ) ** 0.5)
+
+            # Manhattan Distance - Expanded 1133 Nodes
+            maxVal = max(maxVal, ( abs (state[0][0] - corners[i][0])  + abs(state[0][1] - corners[i][1]) ) )
+            # print maxVal
+        i += 1
+    # if all nodes are visited the above if condition fails
+    # Hence maxVal remains negative, causing inconsistency
+    # Check to return non-negative values hieuristic.
+    # This check is fine as no hieuristic calculations above can reutrn a negative value
+    return maxVal
+
+    #return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -469,8 +488,38 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
+    maxVal = 0
+    food  = foodGrid.asList()
     "*** YOUR CODE HERE ***"
-    return 0
+
+    for f in foodGrid.asList():
+        if (f, position) in problem.heuristicInfo:
+            d = problem.heuristicInfo[(f,position)]
+        else:
+            d = mazeDistance(position, f, problem.startingGameState)
+            problem.heuristicInfo[(f,position)] = d
+        maxVal = max(d,maxVal)
+
+        # Euclidean Distance - Expanded 10k+ Nodes
+        # maxVal = max(maxVal, ( (f[0] - position[0]) ** 2 + (f[1] - position[1]) ** 2 ) ** 0.5)
+
+        # Manhattan Distance - Expanded 9k+ Nodes
+        # maxVal = max(maxVal, (abs(f[0] - position[0]) + abs(f[1] - position[1])))
+
+        # Chebyshevs Distance - Expanded 10k+ Nodes
+        # maxVal = max(maxVal, max((abs(f[0] - position[0]) , abs(f[1] - position[1]))))
+
+    return maxVal
+
+    # maxF = 0
+    # maxS = 0
+    # for f1 in food:
+    #     for f2 in food:
+    #         # d = mazeDistance(f1, f2, problem.startingGameState)
+    #         maxF = min(maxF, (abs(f1[0] - f2[0]) + abs(f1[1] - f2[1])))
+    #     # d1 = mazeDistance(position, f1, problem.startingGameState)
+    #     maxS = max(maxS, (abs(f1[0] - position[0]) + abs(f1[1] - position[1])))
+    # return maxS + maxF
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -501,7 +550,8 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.bfs(problem)
+        # util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -537,7 +587,8 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.food[x][y]
+        # util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
     """

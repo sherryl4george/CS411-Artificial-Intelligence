@@ -136,7 +136,6 @@ def breadthFirstSearch(problem):
         return []
 
     queue.push(start)
-
     while not queue.isEmpty():
         parent = queue.pop();
         if problem.isGoalState(parent[0]):
