@@ -88,6 +88,18 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
+    """
+    state: Search state
+
+    For a given state, this should return a list of triples, (successor,
+    action, stepCost), where 'successor' is a successor to the current
+    state, 'action' is the action required to get there, and 'stepCost' is
+    the incremental cost of expanding to that successor.
+    
+    # node[0] = (nextx,nexty)
+    # node[1] = List of actions
+    # node[2] = Cost of the action
+    """
     stack = util.Stack()
     explored = set();
     start = (problem.getStartState(), [], 0)
@@ -98,19 +110,24 @@ def depthFirstSearch(problem):
     stack.push(start)
 
     while not stack.isEmpty():
-        (node, path, cost) = stack.pop();
-        if problem.isGoalState(node):
-            return path
-        if not node in explored:
-            explored.add(node)
-            for (child_node, child_path, child_cost) in problem.getSuccessors(node):
-                new_cost = cost + child_cost
-                new_path = path + [child_path]
-                stack.push((child_node, new_path, new_cost))
+        parent = stack.pop();
+        if problem.isGoalState(parent[0]):
+            return parent[1]
+        if not parent[0] in explored:
+            explored.add(parent[0])
+            for successor in problem.getSuccessors(parent[0]):
+                new_cost = parent[2] + successor[2]
+                new_path = parent[1] + [successor[1]]
+                stack.push((successor[0], new_path, new_cost))
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    """
+    # node[0] = (nextx,nexty)
+    # node[1] = List of actions
+    # node[2] = Cost of the action
+    """
     queue = util.Queue()
     explored = set();
     start = (problem.getStartState(), [], 0)
@@ -121,15 +138,15 @@ def breadthFirstSearch(problem):
     queue.push(start)
 
     while not queue.isEmpty():
-        (node, path, cost) = queue.pop();
-        if problem.isGoalState(node):
-            return path
-        if not node in explored:
-            explored.add(node)
-            for (child_node, child_path, child_cost) in problem.getSuccessors(node):
-                new_cost = cost + child_cost
-                new_path = path + [child_path]
-                queue.push((child_node, new_path, new_cost))
+        parent = queue.pop();
+        if problem.isGoalState(parent[0]):
+            return parent[1]
+        if not parent[0] in explored:
+            explored.add(parent[0])
+            for successor in problem.getSuccessors(parent[0]):
+                new_cost = parent[2] + successor[2]
+                new_path = parent[1] + [successor[1]]
+                queue.push((successor[0], new_path, new_cost))
 
 
 def uniformCostSearch(problem):
@@ -142,17 +159,16 @@ def uniformCostSearch(problem):
         return []
 
     pq.push(start, 0)
-
     while not pq.isEmpty():
-        (node, path, cost) = pq.pop();
-        if problem.isGoalState(node):
-            return path
-        if not node in explored:
-            explored.add(node)
-            for (child_node, child_path, child_cost) in problem.getSuccessors(node):
-                new_cost = cost + child_cost
-                new_path = path + [child_path]
-                pq.push((child_node, new_path, new_cost),new_cost)
+        parent = pq.pop();
+        if problem.isGoalState(parent[0]):
+            return parent[1]
+        if not parent[0] in explored:
+            explored.add(parent[0])
+            for successor in problem.getSuccessors(parent[0]):
+                new_cost = parent[2] + successor[2]
+                new_path = parent[1] + [successor[1]]
+                pq.push((successor[0], new_path, new_cost), new_cost)
 
 def nullHeuristic(state, problem=None):
     """
@@ -171,18 +187,16 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         return []
 
     pq.push(start, 0)
-
     while not pq.isEmpty():
-        (node, path, cost) = pq.pop();
-        if problem.isGoalState(node):
-            return path
-        if not node in explored:
-            explored.add(node)
-            for (child_node, child_path, child_cost) in problem.getSuccessors(node):
-                new_cost = cost + child_cost + heuristic(child_node, problem) - heuristic(node, problem)
-                # new_cost = child_cost + heuristic(child_node, problem)
-                new_path = path + [child_path]
-                pq.push((child_node, new_path, new_cost),new_cost)
+        parent = pq.pop();
+        if problem.isGoalState(parent[0]):
+            return parent[1]
+        if not parent[0] in explored:
+            explored.add(parent[0])
+            for successor in problem.getSuccessors(parent[0]):
+                new_cost = parent[2] + successor[2] + heuristic(successor[0], problem) - heuristic(parent[0], problem)
+                new_path = parent[1] + [successor[1]]
+                pq.push((successor[0], new_path, new_cost), new_cost)
 
 
 # Abbreviations
