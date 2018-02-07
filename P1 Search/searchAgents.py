@@ -499,27 +499,19 @@ def foodHeuristic(state, problem):
             d = mazeDistance(position, f, problem.startingGameState)
             problem.heuristicInfo[(f,position)] = d
         maxVal = max(d,maxVal)
-
-        # Euclidean Distance - Expanded 10k+ Nodes
-        # maxVal = max(maxVal, ( (f[0] - position[0]) ** 2 + (f[1] - position[1]) ** 2 ) ** 0.5)
-
-        # Manhattan Distance - Expanded 9k+ Nodes
-        # maxVal = max(maxVal, (abs(f[0] - position[0]) + abs(f[1] - position[1])))
-
-        # Chebyshevs Distance - Expanded 10k+ Nodes
-        # maxVal = max(maxVal, max((abs(f[0] - position[0]) , abs(f[1] - position[1]))))
-
+    #
+    #     # Euclidean Distance - Expanded 10k+ Nodes
+    #     # maxVal = max(maxVal, ( (f[0] - position[0]) ** 2 + (f[1] - position[1]) ** 2 ) ** 0.5)
+    #
+    #     # Manhattan Distance - Expanded 9k+ Nodes
+    #     # maxVal = max(maxVal, (abs(f[0] - position[0]) + abs(f[1] - position[1])))
+    #
+    #     # Chebyshevs Distance - Expanded 10k+ Nodes
+    #     # maxVal = max(maxVal, max((abs(f[0] - position[0]) , abs(f[1] - position[1]))))
+    #
     return maxVal
 
-    # maxF = 0
-    # maxS = 0
-    # for f1 in food:
-    #     for f2 in food:
-    #         # d = mazeDistance(f1, f2, problem.startingGameState)
-    #         maxF = min(maxF, (abs(f1[0] - f2[0]) + abs(f1[1] - f2[1])))
-    #     # d1 = mazeDistance(position, f1, problem.startingGameState)
-    #     maxS = max(maxS, (abs(f1[0] - position[0]) + abs(f1[1] - position[1])))
-    # return maxS + maxF
+
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -606,4 +598,4 @@ def mazeDistance(point1, point2, gameState):
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
     prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
-    return len(search.bfs(prob))
+    return len(search.aStarSearch(prob,manhattanHeuristic))
