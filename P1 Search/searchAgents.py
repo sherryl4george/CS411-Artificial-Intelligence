@@ -487,18 +487,6 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
-    maxVal = 0
-    food  = foodGrid.asList()
-    "*** YOUR CODE HERE ***"
-
-    for f in foodGrid.asList():
-        if (f, position) in problem.heuristicInfo:
-            d = problem.heuristicInfo[(f,position)]
-        else:
-            d = mazeDistance(position, f, problem.startingGameState)
-            problem.heuristicInfo[(f,position)] = d
-        maxVal = max(d,maxVal)
     #
     #     # Euclidean Distance - Expanded 10k+ Nodes
     #     # maxVal = max(maxVal, ( (f[0] - position[0]) ** 2 + (f[1] - position[1]) ** 2 ) ** 0.5)
@@ -509,9 +497,14 @@ def foodHeuristic(state, problem):
     #     # Chebyshevs Distance - Expanded 10k+ Nodes
     #     # maxVal = max(maxVal, max((abs(f[0] - position[0]) , abs(f[1] - position[1]))))
     #
-    return maxVal
-
-
+    # Maximum Maze Distance - Expanded 4K+ nodes in 2.4 seconds with a cost of 60
+    position, foodGrid = state
+    foodList = foodGrid.asList()
+    if len(foodList) == 0:
+        return 0
+    closestPosition = findClosestItem(position, foodList)
+    distanceToClosest = mazeDistance(position, closestPosition, problem.startingGameState)
+    return distanceToClosest + len(foodList) - 1
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -598,4 +591,14 @@ def mazeDistance(point1, point2, gameState):
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
     prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
-    return len(search.aStarSearch(prob,manhattanHeuristic))
+    return len(search.bfs(prob))
+
+def findClosestItem(position,itemList):
+    closestPos = itemList[0]
+    closestDis = util.manhattanDistance(position,closestPos)
+    for candidate in itemList[1:]:
+        dist = util.manhattanDistance(position,candidate)
+        if dist < closestDis:
+            closestDis = dist
+            closestPos = candidate
+    return closestPos
