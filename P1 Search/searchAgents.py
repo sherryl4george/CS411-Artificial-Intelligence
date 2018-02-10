@@ -373,10 +373,6 @@ def cornersHeuristic(state, problem):
     admissible (as well as consistent).
     """
     corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
-    "*** YOUR CODE HERE ***"
-
     maxVal = 0
     i = 0
     # util.raiseNotDefined()
@@ -387,14 +383,12 @@ def cornersHeuristic(state, problem):
 
             # Manhattan Distance - Expanded 1133 Nodes
             maxVal = max(maxVal, ( abs (state[0][0] - corners[i][0])  + abs(state[0][1] - corners[i][1]) ) )
-            # print maxVal
         i += 1
     # if all nodes are visited the above if condition fails
     # Hence maxVal remains negative, causing inconsistency
     # Check to return non-negative values hieuristic.
     # This check is fine as no hieuristic calculations above can reutrn a negative value
     return maxVal
-
     #return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
@@ -497,7 +491,8 @@ def foodHeuristic(state, problem):
     #     # Chebyshevs Distance - Expanded 10k+ Nodes
     #     # maxVal = max(maxVal, max((abs(f[0] - position[0]) , abs(f[1] - position[1]))))
     #
-    # Maximum Maze Distance - Expanded 4K+ nodes in 2.4 seconds with a cost of 60
+    #     # Maximum Maze Distance - Expanded 4K+ nodes in 2.4 seconds with a cost of 60
+
     position, foodGrid = state
     foodList = foodGrid.asList()
     if len(foodList) == 0:
@@ -533,8 +528,6 @@ class ClosestDotSearchAgent(SearchAgent):
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
-
-        "*** YOUR CODE HERE ***"
         return search.bfs(problem)
         # util.raiseNotDefined()
 
@@ -570,8 +563,6 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
-
-        "*** YOUR CODE HERE ***"
         return self.food[x][y]
         # util.raiseNotDefined()
 
@@ -594,6 +585,13 @@ def mazeDistance(point1, point2, gameState):
     return len(search.bfs(prob))
 
 def findClosestItem(position,itemList):
+    """
+    utility to find the closest item. Food/Cornner as needed
+    :param position:
+    :param itemList:
+    :return: closestPosition
+    """
+
     closestPos = itemList[0]
     closestDis = util.manhattanDistance(position,closestPos)
     for candidate in itemList[1:]:

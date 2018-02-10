@@ -85,10 +85,7 @@ def depthFirstSearch(problem):
     print "Start:", problem.getStartState()
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
-    """
-    "*** YOUR CODE HERE ***"
 
-    """
     state: Search state
 
     For a given state, this should return a list of triples, (successor,
@@ -121,13 +118,14 @@ def depthFirstSearch(problem):
                 stack.push((successor[0], new_path, new_cost))
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
+    """Search the shallowest nodes in the search tree first.
     "*** YOUR CODE HERE ***"
-    """
+
     # node[0] = (nextx,nexty)
     # node[1] = List of actions
     # node[2] = Cost of the action
     """
+
     queue = util.Queue()
     explored = set();
     start = (problem.getStartState(), [], 0)
