@@ -46,7 +46,6 @@ class ValueIterationAgent(ValueEstimationAgent):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
 
-
     def getValue(self, state):
         """
           Return the value of the state (computed in __init__).
@@ -60,7 +59,12 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        finalVal = 0
+        transition =self.mdp.getTransitionStatesAndProbs(state,action)
+        for successor,probability in transition:
+            finalVal += probability * (self.mdp.getReward(state,action,successor) +
+                                      (self.discount * self.values[successor]))
+        return finalVal
 
     def computeActionFromValues(self, state):
         """
