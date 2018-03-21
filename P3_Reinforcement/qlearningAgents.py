@@ -64,7 +64,10 @@ class QLearningAgent(ReinforcementAgent):
         maxval = float('-inf')
         for a in self.getLegalActions(state):
             maxval = max(maxval,self.getQValue(state,a))
-        return maxval if maxval != float('-inf') else 0.0
+        if maxval != float('-inf'):
+            return maxval
+        else:
+            return 0.0
 
     def computeActionFromQValues(self, state):
         """
